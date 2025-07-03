@@ -14,7 +14,7 @@ GMod provides many built-in icons, found in:
 
 If you're using a custom icon:
 
-- It **must be 16x16 pixels**
+- It **must be 16x16**
 - It should be **mounted properly** in the game's `resource/` directory
 - You can put it in game via a **local addon**
 
