@@ -8,7 +8,7 @@ Before using this tool, make sure you have the following:
 
 - A **16x16 icon**  
   GMod provides many of these by default. You can find them in:  
-  `resource/icon16/`
+  `VPK/resource/icon16/`
 
 - The **models you want to use**  
   These should be:
