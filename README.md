@@ -1,17 +1,26 @@
 # GMod Spawnlist Generator
 
-A simple tool for generating model-based spawnlists for **Garry's Mod**.
+A simple utility for generating model-based spawnlists for **Garry's Mod**.
 
 ## Requirements
 
-Before using this tool, make sure you have the following:
+Before using this tool, ensure you have the following:
 
-- A **16x16 icon**  
-  GMod provides many of these by default, which can be found in:  
-  `VPK/resource/icon16/`  
-  If you're using your own custom icon, make sure it is **16x16** and mounted properly in the game's `resource` folder so it can be accessed in-game.
+### A 16x16 Icon
 
-- The **models you want to use**  
-  These should be:
-  - Mounted in-game  
-  - Extracted elsewhere so they can be input into the program
+GMod provides many built-in icons, found in:
+
+`VPK/resource/icon16/`
+
+If you're using a custom icon:
+
+- It **must be 16x16 pixels**
+- It should be **mounted properly** in the game's `resource/` directory
+- You can put it in game via a **local addon**
+
+### The Models You Want to Use
+
+Make sure your models are:
+
+- **Mounted in-game**
+- **Extracted** to a location where they can be accessed and passed into the program
