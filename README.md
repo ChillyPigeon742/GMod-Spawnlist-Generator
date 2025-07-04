@@ -10,7 +10,7 @@ Before using this tool, ensure you have the following:
 
 GMod provides many built-in icons, found in:
 
-`VPK/resource/icon16/`
+`VPK/materials/icon16/`
 
 If you're using a custom icon:
 
