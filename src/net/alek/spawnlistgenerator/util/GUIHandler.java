@@ -26,8 +26,9 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
-public class initGUI {
+public class GUIHandler {
     public static JFrame window = new JFrame();
 
     private static final Font LABEL_FONT = new Font("SansSerif", Font.BOLD, 13);
@@ -43,6 +44,8 @@ public class initGUI {
     public static DefaultTableModel tableModel;
     private static JTable modelTable;
 
+    private static JButton generateBtn;
+
     public static void setupGUI(){
         window.setTitle("GMod Spawnlist Creator");
         window.setSize(1280, 720);
@@ -54,12 +57,12 @@ public class initGUI {
         contentPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
         contentPanel.setBackground(new Color(50,50,50));
 
-        contentPanel.add(initGUI.buildTopPanel(), BorderLayout.NORTH);
-        contentPanel.add(initGUI.buildTablePanel(), BorderLayout.CENTER);
-        contentPanel.add(initGUI.buildButtonPanel(), BorderLayout.SOUTH);
+        contentPanel.add(GUIHandler.buildTopPanel(), BorderLayout.NORTH);
+        contentPanel.add(GUIHandler.buildTablePanel(), BorderLayout.CENTER);
+        contentPanel.add(GUIHandler.buildButtonPanel(), BorderLayout.SOUTH);
 
         window.add(contentPanel);
-        initGUI.configureDragAndDrop();
+        GUIHandler.configureDragAndDrop();
         window.setLocationRelativeTo(null);
         window.setVisible(true);
         window.addMouseListener(new MouseAdapter() {
@@ -99,7 +102,7 @@ public class initGUI {
         inputPanel.add(createLabel("📁 Spawnlist Name:"));
         inputPanel.add(nameField);
 
-        inputPanel.add(createLabel("🖼️ Icon Path (In VPK/resource):"));
+        inputPanel.add(createLabel("🖼️ Icon Path (In VPK/materials):"));
         inputPanel.add(iconField);
 
         inputPanel.add(createLabel("🆔 Spawnlist ID:"));
@@ -167,7 +170,7 @@ public class initGUI {
     }
 
     public static JPanel buildButtonPanel() {
-        JButton generateBtn = new JButton("⚙️ Generate");
+        generateBtn = new JButton("⚙️ Generate");
         JButton newEntryBtn = new JButton("➕ New Entry");
         JButton deleteEntryBtn = new JButton("❌ Delete");
         JButton editModelBtn = new JButton("✏️ Edit Model Path");
@@ -205,6 +208,20 @@ public class initGUI {
         editHeaderBtn.addActionListener(e -> editSelectedColumn(1, "Enter new Header:"));
         generateBtn.addActionListener(e -> SpawnlistHandler.generateSpawnlist());
 
+        DocumentListener listener = new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { updateGenerateButton(); }
+            public void removeUpdate(DocumentEvent e) { updateGenerateButton(); }
+            public void changedUpdate(DocumentEvent e) { updateGenerateButton(); }
+        };
+        GUIHandler.nameField.getDocument().addDocumentListener(listener);
+        GUIHandler.idField.getDocument().addDocumentListener(listener);
+        GUIHandler.iconField.getDocument().addDocumentListener(listener);
+        GUIHandler.parentIdField.getDocument().addDocumentListener(listener);
+
+        GUIHandler.tableModel.addTableModelListener(e -> updateGenerateButton());
+        updateGenerateButton();
+
+
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
         leftPanel.setBackground(new Color(50,50,50));
         leftPanel.add(newEntryBtn);
@@ -222,6 +239,14 @@ public class initGUI {
         buttonPanel.add(rightPanel, BorderLayout.EAST);
 
         return buttonPanel;
+    }
+
+    public static void updateGenerateButton() {
+        boolean fieldsFilled = Stream.of(GUIHandler.nameField, GUIHandler.idField, GUIHandler.iconField, GUIHandler.parentIdField)
+                .noneMatch(f -> f.getText().trim().isEmpty());
+        boolean hasRows = GUIHandler.tableModel.getRowCount() > 0;
+
+        generateBtn.setEnabled(fieldsFilled && hasRows);
     }
 
     public static void configureDragAndDrop() {
@@ -389,15 +414,19 @@ public class initGUI {
                 return "Text Documents (*.txt)";
             }
         });
-        String idText = initGUI.idField.getText();
-        String fileName = (Integer.parseInt(idText) >= 100 ? idText : "0" + idText) + "-" + initGUI.nameField.getText().toLowerCase() + ".txt";
+        String idText = GUIHandler.idField.getText();
+        String fileName = (Integer.parseInt(idText) >= 100 ? idText : "0" + idText) + "-" + GUIHandler.nameField.getText().toLowerCase() + ".txt";
         chooser.setSelectedFile(new File(fileName));
 
-        int result = chooser.showSaveDialog(initGUI.window);
+        int result = chooser.showSaveDialog(GUIHandler.window);
         if (result == JFileChooser.APPROVE_OPTION) {
             return chooser.getSelectedFile();
         }
 
         return null;
+    }
+
+    public static void repaint(){
+        SwingUtilities.updateComponentTreeUI(JFrame.getFrames()[0]);
     }
 }

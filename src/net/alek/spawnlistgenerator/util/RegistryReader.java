@@ -21,7 +21,7 @@ public class RegistryReader {
         for (String regPath : registryPaths) {
             installPath = queryRegistryForInstallLocation(regPath);
             if (installPath != null) {
-                initGUI.gmodPathField.setText(installPath);
+                GUIHandler.gmodPathField.setText(installPath);
                 break;
             }
         }

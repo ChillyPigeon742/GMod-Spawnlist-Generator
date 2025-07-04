@@ -1,7 +1,7 @@
 package net.alek.spawnlistgenerator.core;
 
 import net.alek.spawnlistgenerator.util.AssetsLoader;
-import net.alek.spawnlistgenerator.util.initGUI;
+import net.alek.spawnlistgenerator.util.GUIHandler;
 
 import javax.swing.*;
 
@@ -24,7 +24,6 @@ public class ErrorHandler {
         Logger.Log.error(typeOfException+"/"+caller+"/The Program has Suffered an "+typeOfException+"!");
 
         Logger.Log.error("Unloading Assets...");
-        initGUI.window.setIconImage(AssetsLoader.getMissingIcon().getImage());
         AssetsLoader.unload();
 
         Logger.Log.error("Unloading Themes...");
@@ -33,11 +32,19 @@ public class ErrorHandler {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             throw new StackOverflowError();
         }
-        SwingUtilities.updateComponentTreeUI(JFrame.getFrames()[0]);
+        GUIHandler.repaint();
         JFrame.getFrames()[0].dispose();
 
-        JOptionPane.showMessageDialog(null, typeOfException+"/"+caller+"\n\n" +
-                "The Program has Suffered an "+typeOfException+"!");
+        JOptionPane.showOptionDialog(
+                null,
+                typeOfException + "/" + caller + "\n\nThe program has suffered an " + typeOfException + "!",
+                "Error",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.ERROR_MESSAGE,
+                UIManager.getIcon("OptionPane.errorIcon"),
+                new Object[]{"OK"},
+                "OK"
+        );
     }
 
     public static void IOException() {

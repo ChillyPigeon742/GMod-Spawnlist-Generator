@@ -13,7 +13,6 @@ import java.util.Objects;
 
 public class AssetsLoader {
     private static ImageIcon appIcon;
-    private static ImageIcon missing;
     private static byte[] clickData;
     private static byte[] hoverData;
 
@@ -22,7 +21,6 @@ public class AssetsLoader {
 
         Logger.Log.info("Loading images...");
         appIcon = new ImageIcon(Objects.requireNonNull(AssetsLoader.class.getResource("/assets/image/icon.png")));
-        missing = new ImageIcon(Objects.requireNonNull(AssetsLoader.class.getResource("/assets/image/missing.png")));
 
         Logger.Log.info("Loading audio data...");
         try {
@@ -43,10 +41,6 @@ public class AssetsLoader {
 
     public static ImageIcon getAppIcon() {
         return appIcon;
-    }
-
-    public static ImageIcon getMissingIcon() {
-        return missing;
     }
 
     public static AudioInputStream getClick() {

@@ -8,14 +8,11 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class AFileChooser extends JFileChooser {
-
-    private final JCheckBox exportToGModCheckbox = new JCheckBox("Export to GMod?");
-    private File lastDirectory;
+    private final JButton exportToGModCheckbox = new JButton("Export to GMod");
 
     public AFileChooser() {
         exportToGModCheckbox.setSelected(false);
@@ -28,14 +25,9 @@ public class AFileChooser extends JFileChooser {
         });
 
         exportToGModCheckbox.addActionListener(e -> {
-            if (exportToGModCheckbox.isSelected()) {
-                lastDirectory = getCurrentDirectory();
-                Path gmodDir = Paths.get(RegistryReader.installPath + "\\garrysmod\\settings\\spawnlist");
-                if (gmodDir.toFile().exists()) {
-                    setCurrentDirectory(gmodDir.toFile());
-                }
-            } else {
-                setCurrentDirectory(lastDirectory);
+            Path gmodDir = Paths.get(RegistryReader.installPath + "\\garrysmod\\settings\\spawnlist");
+            if (gmodDir.toFile().exists()) {
+                setCurrentDirectory(gmodDir.toFile());
             }
         });
 

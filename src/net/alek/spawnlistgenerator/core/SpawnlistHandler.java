@@ -1,6 +1,6 @@
 package net.alek.spawnlistgenerator.core;
 
-import net.alek.spawnlistgenerator.util.initGUI;
+import net.alek.spawnlistgenerator.util.GUIHandler;
 
 import javax.swing.*;
 import java.io.File;
@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class SpawnlistHandler {
     public static String capitalize(String input) {
@@ -30,28 +29,22 @@ public class SpawnlistHandler {
                 if (file.isDirectory()){
                     queue.add(file);
                 }else if (file.getName().toLowerCase().endsWith(".mdl")){
-                    initGUI.addModelEntry(file);
+                    GUIHandler.addModelEntry(file);
                 }
             }
         }
     }
 
     public static void generateSpawnlist() {
-        if (Stream.of(initGUI.nameField, initGUI.idField, initGUI.iconField, initGUI.parentIdField).anyMatch(f -> f.getText().trim().isEmpty())
-                || initGUI.tableModel.getRowCount() == 0) {
-            new Thread(() -> JOptionPane.showMessageDialog(initGUI.window, "Fill in all fields and add at least one model.")).start();
-            return;
-        }
-
         new Thread(() -> {
-            File saveFile = initGUI.showSpawnlistSaveDialog();
+            File saveFile = GUIHandler.showSpawnlistSaveDialog();
             if (saveFile == null) return;
 
             String spawnlist = buildSpawnlist();
 
             try (FileWriter fw = new FileWriter(saveFile)) {
                 fw.write(spawnlist);
-                JOptionPane.showMessageDialog(initGUI.window, "Spawnlist saved:\n" + saveFile.getAbsolutePath());
+                JOptionPane.showMessageDialog(GUIHandler.window, "Spawnlist saved:\n" + saveFile.getAbsolutePath());
             } catch (IOException e) {
                 ErrorHandler.IOException();
             }
@@ -61,15 +54,15 @@ public class SpawnlistHandler {
     private static String buildSpawnlist() {
         StringBuilder sb = new StringBuilder();
         sb.append("\"TableToKeyValues\"\n{\n")
-                .append("\t\"parentid\"\t\"").append(initGUI.parentIdField.getText().trim()).append("\"\n")
-                .append("\t\"icon\"\t\"").append(initGUI.iconField.getText().trim()).append("\"\n")
-                .append("\t\"id\"\t\"").append(initGUI.idField.getText().trim()).append("\"\n")
+                .append("\t\"parentid\"\t\"").append(GUIHandler.parentIdField.getText().trim()).append("\"\n")
+                .append("\t\"icon\"\t\"").append(GUIHandler.iconField.getText().trim()).append("\"\n")
+                .append("\t\"id\"\t\"").append(GUIHandler.idField.getText().trim()).append("\"\n")
                 .append("\t\"contents\"\n\t{\n");
 
         Map<String, List<String>> headerMap = new LinkedHashMap<>();
-        for (int i = 0; i < initGUI.tableModel.getRowCount(); i++) {
-            String path = initGUI.tableModel.getValueAt(i, 0).toString().replace("\\", "/");
-            String header = initGUI.tableModel.getValueAt(i, 1).toString().trim();
+        for (int i = 0; i < GUIHandler.tableModel.getRowCount(); i++) {
+            String path = GUIHandler.tableModel.getValueAt(i, 0).toString().replace("\\", "/");
+            String header = GUIHandler.tableModel.getValueAt(i, 1).toString().trim();
             header = header.isEmpty() ? "Models" : header;
             headerMap.computeIfAbsent(header, k -> new ArrayList<>()).add(path);
         }
@@ -92,7 +85,7 @@ public class SpawnlistHandler {
         }
 
         sb.append("\t}\n")
-                .append("\t\"name\"\t\"").append(initGUI.nameField.getText().trim()).append("\"\n")
+                .append("\t\"name\"\t\"").append(GUIHandler.nameField.getText().trim()).append("\"\n")
                 .append("\t\"version\"\t\"3\"\n")
                 .append("}");
 
