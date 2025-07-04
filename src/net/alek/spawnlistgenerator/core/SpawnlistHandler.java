@@ -61,25 +61,39 @@ public class SpawnlistHandler {
 
         Map<String, List<String>> headerMap = new LinkedHashMap<>();
         for (int i = 0; i < GUIHandler.tableModel.getRowCount(); i++) {
-            String path = GUIHandler.tableModel.getValueAt(i, 0).toString().replace("\\", "/");
+            String path = GUIHandler.tableModel.getValueAt(i, 0).toString().replace("\\", "/").trim();
             String header = GUIHandler.tableModel.getValueAt(i, 1).toString().trim();
-            header = header.isEmpty() ? "Models" : header;
-            headerMap.computeIfAbsent(header, k -> new ArrayList<>()).add(path);
+
+            if (path.isEmpty()) continue;
+
+            int modelIndex = path.toLowerCase().indexOf("models/");
+            String cleanPath = modelIndex >= 0 ? path.substring(modelIndex) : path;
+            if (!cleanPath.toLowerCase().startsWith("models/")) {
+                cleanPath = "models/" + cleanPath;
+            }
+
+            cleanPath = cleanPath.replaceAll("(?i)^models/models/", "models/");
+
+            if (!header.isEmpty()) {
+                headerMap.computeIfAbsent(header, k -> new ArrayList<>()).add(cleanPath);
+            } else {
+                headerMap.computeIfAbsent("__no_header__", k -> new ArrayList<>()).add(cleanPath);
+            }
         }
 
         int index = 1;
         for (Map.Entry<String, List<String>> entry : headerMap.entrySet()) {
-            sb.append("\t\t\"").append(index++).append("\"\n\t\t{\n")
-                    .append("\t\t\t\"type\"\t\"header\"\n")
-                    .append("\t\t\t\"text\"\t\"").append(entry.getKey()).append("\"\n")
-                    .append("\t\t}\n");
+            if (!entry.getKey().equals("__no_header__")) {
+                sb.append("\t\t\"").append(index++).append("\"\n\t\t{\n")
+                        .append("\t\t\t\"type\"\t\"header\"\n")
+                        .append("\t\t\t\"text\"\t\"").append(entry.getKey()).append("\"\n")
+                        .append("\t\t}\n");
+            }
 
             for (String path : entry.getValue()) {
-                int modelIndex = path.toLowerCase().indexOf("models/");
-                String relativePath = modelIndex >= 0 ? path.substring(modelIndex) : path;
                 sb.append("\t\t\"").append(index++).append("\"\n\t\t{\n")
                         .append("\t\t\t\"type\"\t\"model\"\n")
-                        .append("\t\t\t\"model\"\t\"").append(relativePath).append("\"\n")
+                        .append("\t\t\t\"model\"\t\"").append(path).append("\"\n")
                         .append("\t\t}\n");
             }
         }
