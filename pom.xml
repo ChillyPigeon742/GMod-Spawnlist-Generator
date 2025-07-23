@@ -6,7 +6,7 @@
 
     <groupId>net.alek</groupId>
     <artifactId>spawnlistgenerator</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <name>GMod Spawnlist Generator</name>
 
     <properties>
@@ -78,6 +78,7 @@
                             <mainClass>net.alek.spawnlistgenerator.core.Main</mainClass>
                         </manifest>
                     </archive>
+                    <outputDirectory>${project.build.directory}/mods</outputDirectory>
                 </configuration>
             </plugin>
 
@@ -93,7 +94,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/Library</outputDirectory>
+                            <outputDirectory>${project.build.directory}/mods</outputDirectory>
                             <includeScope>runtime</includeScope>
                         </configuration>
                     </execution>
