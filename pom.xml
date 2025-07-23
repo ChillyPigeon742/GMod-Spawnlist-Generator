@@ -6,20 +6,99 @@
 
     <groupId>net.alek</groupId>
     <artifactId>spawnlistgenerator</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.2.0</version>
+    <name>GMod Spawnlist Generator</name>
+
+    <properties>
+        <app.version>${project.version}</app.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <flatlaf.version>3.6</flatlaf.version>
+
+        <compiler.version>3.13.0</compiler.version>
+        <resource.filtering.version>3.3.1</resource.filtering.version>
+        <jar.plugin.version>3.3.0</jar.plugin.version>
+        <dependency.plugin.version>3.6.0</dependency.plugin.version>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
-            <version>3.6</version>
+            <version>${flatlaf.version}</version>
         </dependency>
     </dependencies>
 
-    <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <build>
+        <sourceDirectory>src</sourceDirectory>
 
+        <resources>
+            <resource>
+                <directory>src/assets</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <targetPath>assets</targetPath>
+            </resource>
+
+            <resource>
+                <directory>src/assets/config</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>Maven.properties</include>
+                </includes>
+                <targetPath>assets/config</targetPath>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler.version}</version>
+                <configuration>
+                    <release>21</release>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${resource.filtering.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${jar.plugin.version}</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>net.alek.spawnlistgenerator.core.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${dependency.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/Library</outputDirectory>
+                            <includeScope>runtime</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

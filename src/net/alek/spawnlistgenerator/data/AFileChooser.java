@@ -1,7 +1,7 @@
 package net.alek.spawnlistgenerator.data;
 
 import net.alek.spawnlistgenerator.core.Logger;
-import net.alek.spawnlistgenerator.util.RegistryReader;
+import net.alek.spawnlistgenerator.util.InstallPathFinder;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class AFileChooser extends JFileChooser {
     private final JButton exportToGModCheckbox = new JButton("Export to GMod");
@@ -25,7 +24,7 @@ public class AFileChooser extends JFileChooser {
         });
 
         exportToGModCheckbox.addActionListener(e -> {
-            Path gmodDir = Paths.get(RegistryReader.installPath + "\\garrysmod\\settings\\spawnlist");
+            Path gmodDir = Path.of(InstallPathFinder.installPath + "\\garrysmod\\settings\\spawnlist");
             if (gmodDir.toFile().exists()) {
                 setCurrentDirectory(gmodDir.toFile());
             }
