@@ -6,13 +6,14 @@
 
     <groupId>net.alek</groupId>
     <artifactId>spawnlistgenerator</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
     <name>GMod Spawnlist Generator</name>
 
     <properties>
-        <app.version>${project.version}</app.version>
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <app.version>${project.version}</app.version>
         <flatlaf.version>3.6</flatlaf.version>
 
         <compiler.version>3.13.0</compiler.version>
@@ -58,7 +59,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${compiler.version}</version>
                 <configuration>
-                    <release>21</release>
+                    <release>${java.version}</release>
                 </configuration>
             </plugin>
 
