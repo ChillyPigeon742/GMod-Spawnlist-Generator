@@ -204,8 +204,8 @@ public class GUIHandler {
             }
         });
 
-        editModelBtn.addActionListener(e -> editSelectedColumn(0, "Enter new Model Path:"));
-        editHeaderBtn.addActionListener(e -> editSelectedColumn(1, "Enter new Header:"));
+        editModelBtn.addActionListener(e -> editSelectedColumn(0, "Enter new Model Path:", true));
+        editHeaderBtn.addActionListener(e -> editSelectedColumn(1, "Enter new Header:", false));
         generateBtn.addActionListener(e -> SpawnlistHandler.generateSpawnlist());
 
         DocumentListener listener = new DocumentListener() {
@@ -375,16 +375,20 @@ public class GUIHandler {
         tableModel.addRow(new Object[]{modelPath, headerName});
     }
 
-    private static void editSelectedColumn(int columnIndex, String message) {
+    private static void editSelectedColumn(int columnIndex, String message, boolean type) {
         int[] selectedRows = modelTable.getSelectedRows();
         if (selectedRows.length == 0) return;
 
         String input = JOptionPane.showInputDialog(window, message);
-        if (input != null && !input.trim().isEmpty()) {
-            for (int row : selectedRows) {
-                int modelIndex = modelTable.convertRowIndexToModel(row);
-                tableModel.setValueAt(input.trim(), modelIndex, columnIndex);
+        if (type) {
+            if (input == null || input.trim().isEmpty()) {
+                return;
             }
+        }
+
+        for (int row : selectedRows) {
+            int modelIndex = modelTable.convertRowIndexToModel(row);
+            tableModel.setValueAt(input.trim(), modelIndex, columnIndex);
         }
     }
 
